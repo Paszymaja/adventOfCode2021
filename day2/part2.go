@@ -34,16 +34,17 @@ func main() {
 		mvs = append(mvs, mv{split[0], v})
 	}
 
-	var h, d int
+	var h, d, aim int
 
 	for _, i := range mvs {
 		switch i.dir {
 		case "forward":
 			h += i.val
+			d += (aim * i.val)
 		case "down":
-			d += i.val
+			aim += i.val
 		case "up":
-			d -= i.val
+			aim -= i.val
 		}
 	}
 	fmt.Print(h * d)
