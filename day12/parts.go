@@ -11,6 +11,16 @@ type Cave struct {
 	con  []string
 }
 
+var test_data = []string{
+	"start-A",
+	"start-b",
+	"A-c",
+	"A-b",
+	"b-d",
+	"A-end",
+	"b-end",
+}
+
 var data = []string{
 	"HF-qu",
 	"end-CF",
@@ -60,6 +70,7 @@ func main() {
 		}
 	}
 	fmt.Println(FindPaths(caves, "start", make(map[string]int)))
+	fmt.Println(FindPathsTwice(caves, "start", make(map[string]int), false))
 
 }
 
@@ -77,6 +88,30 @@ func FindPaths(cv map[string]*Cave, currentCave string, visits map[string]int) i
 				nextVisits = copyMap(visits)
 			}
 			sum += FindPaths(cv, c, nextVisits)
+		}
+	}
+	return sum
+}
+
+func FindPathsTwice(cv map[string]*Cave, currentCave string, visits map[string]int, hasVisitedTwice bool) int {
+
+	if visits[currentCave] > 0 && !cv[currentCave].Big {
+		hasVisitedTwice = true
+	}
+
+	visits[currentCave] += 1
+	sum := 0
+	for _, c := range cv[currentCave].con {
+		if c == "end" {
+			sum++
+			continue
+		}
+		if cv[c].name != "start" && (cv[c].Big || visits[c] < 1 || !hasVisitedTwice) {
+			nextVisits := visits
+			if !cv[c].Big {
+				nextVisits = copyMap(visits)
+			}
+			sum += FindPathsTwice(cv, c, nextVisits, hasVisitedTwice)
 		}
 	}
 	return sum
